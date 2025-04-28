@@ -62,6 +62,19 @@
    ```
    ![Screenshot 2025-04-28 022733](https://github.com/user-attachments/assets/3733d3d9-26c3-465c-8a90-76f7802aa765)
 
+## Reflective Section
+
+This section provides a detailed breakdown of the script's implementation, discusses potential extensions, and reflects on the development challenges.
+
+### 1. Breakdown of How the Script Handles Arguments and Options
+The script begins by validating the number of arguments provided by the user to ensure proper usage. It checks for the presence of at least a search string and a file, unless the `--help` flag is specified. The script uses `getopts` to parse command-line options (`-n` for line numbers and `-v` for inverting matches), allowing these options to be combined in any order (e.g., `-vn` or `-nv`). This is achieved by iterating through the options and setting corresponding flags (`SHOW_LINE_NUMBERS` and `INVERT_MATCH`). After parsing options, the script shifts the argument list to access the search string and file name. It then validates the file's existence and readability, exiting with an error message if the file is invalid. The core search functionality reads the file line by line using a `while` loop, performing a case-insensitive match with `grep -i`. If the `-v` option is set, it inverts the match logic to print non-matching lines. When the `-n` option is specified, it prepends line numbers to the output using a counter, mimicking `grep`'s output style.
+
+### 2. Potential Extensions: Adding Regex, -i, -c, or -l Options
+To support additional features like regex matching or options such as `-i` (case sensitivity toggle), `-c` (count matches), and `-l` (list filenames), the script's structure would need enhancements. First, I would expand the option parsing by adding more flags to `getopts` (e.g., `i:c:l`) to handle these new options. For regex support, I would modify the matching logic to use `grep -E` instead of a fixed-string match, requiring validation of the regex pattern to avoid syntax errors. The `-i` option would toggle case sensitivity by conditionally adding or removing the `-i` flag from the internal `grep` command (since the script currently defaults to case-insensitive). For `-c`, I would introduce a counter to tally matching lines and output only the count at the end, suppressing the line-by-line output. For `-l`, which lists filenames with matches, I would adapt the script to accept multiple files, loop through them, and print only the filenames where matches are found. Structurally, I would refactor the script to use functions for modularity (e.g., separate functions for parsing, matching, and output formatting) and possibly switch to `getopt` for better handling of long options and complex argument combinations.
+
+### 3. Hardest Part of Implementation
+The most challenging aspect of developing this script was handling combined options like `-vn` or `-nv` while ensuring consistent behavior. Using `getopts` required careful management of flags to ensure that the order of options did not affect the outcome, which involved debugging edge cases and testing various combinations. Another difficulty was implementing the `-v` (invert match) functionality correctly, as it required adjusting the logic to print non-matching lines while still supporting the `-n` option for line numbers. Ensuring that the output format matched `grep`'s style, especially with line numbers and inverted matches, involved trial and error to get the formatting and logic right, making this part of the implementation particularly tricky.
+
 
 # Task2. DNS Troubleshooting for `internal.example.com`
 
