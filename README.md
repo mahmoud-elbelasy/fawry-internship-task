@@ -133,7 +133,7 @@ Result: **Resolution failed** again, as expected — public DNS servers do not k
 
 ## Findings
 
-- The internal DNS server listed in `/etc/resolv.conf` (`10.0.0.1`) **successfully resolved** `internal.example.com`.
+- The internal DNS server listed in `/etc/resolv.conf` (`127.0.0.53`) **successfully resolved** `internal.example.com`.
 - Public DNS (`8.8.8.8`) **failed to resolve** `internal.example.com`, as expected.
 - Therefore, the internal DNS setup is correct.
 
@@ -293,128 +293,16 @@ For each potential issue identified above, the following sections explain how to
 - **Fix**:
   - Allow outgoing traffic to port 80/443:
   ```bash
-  sudo iptables -A OUTPUT -p tcp --dport 80 -j ACCEPT
-  sudo iptables -A OUTPUT -p tcp --dport 443 -j ACCEPT
   sudo ufw allow out 80/tcp
   sudo ufw allow out 443/tcp
+  sudo ufw enable
+  sudo ufw reload
   ```
 
-### 6. Network Routing Issues
-- **Confirm**:
-  ```bash
-  traceroute internal.example.com
-  ip route get $(dig +short internal.example.com)
-  ```
-  - Check if the route is incorrect or packets are dropped.
-- **Fix**:
-  - Add a static route (example assumes `192.168.1.100` via gateway `192.168.1.1`):
-  ```bash
-  sudo ip route add 192.168.1.100 via 192.168.1.1
-  ```
+![image](https://github.com/user-attachments/assets/656601ce-ebad-4167-b781-bf311ce6b5f1)
 
-### 7. Service IP Unreachable
-- **Confirm**:
-  ```bash
-  ping $(dig +short internal.example.com)
-  ```
-  - If no response, the IP is unreachable.
-- **Fix**:
-  - Check network configuration (e.g., VLAN, NAT). Example (add NAT rule):
-  ```bash
-  sudo iptables -t nat -A POSTROUTING -d 192.168.1.100 -j MASQUERADE
-  ```
 
-### 8. Web Service Not Running
-- **Confirm**:
-  ```bash
-  sudo systemctl status apache2
-  # or
-  sudo systemctl status nginx
-  ```
-  - Check if the service is inactive or failed.
-- **Fix**:
-  - Start the web service:
-  ```bash
-  sudo systemctl start apache2
-  # or
-  sudo systemctl start nginx
-  ```
 
-### 9. Service Listening on Wrong Interface/Port
-- **Confirm**:
-  ```bash
-  ss -tuln | grep ':80\|:443'
-  ```
-  - Verify the listening IP (e.g., `127.0.0.1` vs. `0.0.0.0`).
-- **Fix**:
-  - Update the web server configuration (e.g., for Nginx):
-  ```bash
-  sudo vi /etc/nginx/sites-available/default
-  # Update: listen 0.0.0.0:80;
-  sudo systemctl restart nginx
-  ```
-
-### 10. Server-Side Firewall
-- **Confirm**:
-  - On the server:
-  ```bash
-  sudo iptables -L INPUT -v -n | grep '80\|443'
-  sudo ufw status
-  ```
-  - Look for rules dropping incoming traffic.
-- **Fix**:
-  - Allow incoming traffic to port 80/443:
-  ```bash
-  sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
-  sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
-  sudo ufw allow 80/tcp
-  sudo ufw allow 443/tcp
-  ```
-
-### 11. SSL/TLS Misconfiguration
-- **Confirm**:
-  ```bash
-  curl -v https://internal.example.com
-  ```
-  - Look for SSL errors (e.g., certificate expired).
-  - Test with `openssl`:
-  ```bash
-  openssl s_client -connect internal.example.com:443
-  ```
-- **Fix**:
-  - Renew or install a valid SSL certificate (e.g., using Certbot):
-  ```bash
-  sudo certbot --nginx -d internal.example.com
-  sudo systemctl restart nginx
-  ```
-
-### 12. Local Hosts File Override
-- **Confirm**:
-  ```bash
-  grep internal.example.com /etc/hosts
-  ```
-  - Check for an incorrect IP mapping.
-- **Fix**:
-  - Edit `/etc/hosts` to remove or correct the entry:
-  ```bash
-  sudo vi /etc/hosts
-  # Remove or update: 127.0.0.1 internal.example.com
-  ```
-
-### 13. Client-Side Proxy/VPN
-- **Confirm**:
-  ```bash
-  env | grep -i proxy
-  ip link
-  ```
-  - Check for proxy environment variables or VPN interfaces.
-- **Fix**:
-  - Disable proxy or VPN:
-  ```bash
-  unset http_proxy https_proxy
-  # Disable VPN (depends on VPN client, e.g., OpenVPN)
-  sudo systemctl stop openvpn@client
-  ```
 
 ## Screenshots
 Screenshots demonstrating the diagnosis (e.g., `dig`, `curl`, `ss`, `telnet`) and resolution (e.g., applying fixes like `iptables`, `systemctl start`, editing `/etc/hosts`) are included in the project submission but not embedded in this README.
@@ -424,13 +312,15 @@ Screenshots demonstrating the diagnosis (e.g., `dig`, `curl`, `ss`, `telnet`) an
 To bypass DNS for testing:
 - **Command**:
   ```bash
-  sudo sh -c 'echo "192.168.1.100 internal.example.com" >> /etc/hosts'
+  sudo sh -c 'echo "127.0.0.1 internal.example.com" >> /etc/hosts'
   ```
 - **Verification**:
   ```bash
   ping internal.example.com
   ```
-  - Confirms the IP resolves to `192.168.1.100` without DNS.
+  - Confirms the IP resolves to `127.0.0.1` without DNS.
+    ![image](https://github.com/user-attachments/assets/0eac14d5-9155-4449-a521-b8b7b4f37860)
+
 
 
 
