@@ -150,31 +150,21 @@ If users are still facing issues, further investigation into local DNS client co
 ## Step 2: Diagnose Service Reachability
 To confirm whether the web service on `internal.example.com` (port 80 or 443) is reachable on the resolved IP, use the following tools and commands:
 
-### Commands to Check Reachability
-1. **Resolve the IP Address**:
-   ```bash
-   dig internal.example.com
-   ```
-   - Extracts the IP address for `internal.example.com`.
-   - Example output: `internal.example.com. 3600 IN A 192.168.1.100`.
-
-2. **Check Service Listening (Local Server)**:
-   ```bash
-   ss -tuln | grep ':80\|:443'
-   ```
-   - Verifies if the server is listening on port 80 or 443.
-   - Example output: `tcp LISTEN 0 128 0.0.0.0:80 0.0.0.0:*`.
-
-3. **Test Connectivity with `curl`**:
+**Test Connectivity with `curl`**:
    ```bash
    curl -v http://internal.example.com
    curl -v https://internal.example.com
    ```
+![Screenshot from 2025-04-28 19-34-33](https://github.com/user-attachments/assets/fff16032-91a5-4d8d-b857-5c349af81fae)
+
+![Screenshot from 2025-04-28 19-37-11](https://github.com/user-attachments/assets/b0894b99-d15d-4d88-b8aa-b14ebbd2f70e)
+
+
    - Attempts to connect to the web service and displays verbose output.
    - Success: HTTP response code (e.g., 200 OK).
    - Failure: Errors like `Connection refused` or `Could not resolve host`.
 
-4. **Test Port Reachability with `telnet`**:
+**Test Port Reachability with `telnet`**:
    ```bash
    telnet internal.example.com 80
    telnet internal.example.com 443
@@ -182,6 +172,10 @@ To confirm whether the web service on `internal.example.com` (port 80 or 443) is
    - Checks if the port is open and reachable.
    - Success: `Connected to internal.example.com`.
    - Failure: `Connection refused` or timeout.
+
+     
+   ![Screenshot from 2025-04-28 19-38-40](https://github.com/user-attachments/assets/e3784fe0-4971-40e3-80ea-04e27b444c00)
+
 
 ### Expected Output
 - If the service is reachable, `curl` returns a valid HTTP response, and `telnet` confirms the connection.
