@@ -39,11 +39,11 @@ dig internal.example.com
 
 
 **Output:**
+![photo_2025-04-28_16-50-44](https://github.com/user-attachments/assets/f0a96ee9-bc88-40b1-b65f-8847728feead)
 
-![Screenshot 2025-04-28 155747](https://github.com/user-attachments/assets/c06b98d7-90be-44e8-8b41-ff6e84860b6a)
 
 
-Result: **Resolution failed** using the internal DNS server.
+Result: **Resolution succeeded** using the internal DNS server.
 
 ---
 
@@ -68,9 +68,18 @@ Result: **Resolution failed** again, as expected — public DNS servers do not k
 
 ## Findings
 
-- The internal DNS server listed in `/etc/resolv.conf` (`127.0.0.53`) **failed to resolve** `internal.example.com`.
-- Public DNS (`8.8.8.8`) also **failed to resolve** `internal.example.com`, which is expected because public DNS servers do not manage internal company domains.
-- Therefore, the issue is likely with the **internal DNS server** being down, misconfigured, or missing the correct DNS records.
+- The internal DNS server listed in `/etc/resolv.conf` (`10.0.0.1`) **successfully resolved** `internal.example.com`.
+- Public DNS (`8.8.8.8`) **failed to resolve** `internal.example.com`, as expected.
+- Therefore, the internal DNS setup is correct.
+
+---
+
+## Conclusion
+
+✅ Internal DNS resolution is working properly.\
+🛠️ Public DNS servers are not supposed to resolve internal domains, so this behavior is expected.
+
+If users are still facing issues, further investigation into local DNS client configuration or network connectivity is required.
 
 ---
 
