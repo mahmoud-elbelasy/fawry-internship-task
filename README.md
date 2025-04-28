@@ -1,4 +1,4 @@
-# mygrep.sh - A Mini Grep Implementation
+# 1. mygrep.sh - A Mini Grep Implementation
 
 ## Overview
 `mygrep.sh` is a Bash script that implements a simplified version of the `grep` command. It searches for a specified string (case-insensitive) in a text file and outputs matching lines, with support for specific command-line options. This project fulfills the requirements of a custom command-line utility with error handling, option parsing, and a style mimicking the standard `grep` command.
@@ -63,7 +63,7 @@
    ![Screenshot 2025-04-28 022733](https://github.com/user-attachments/assets/3733d3d9-26c3-465c-8a90-76f7802aa765)
 
 
-# 🛠️ DNS Troubleshooting for `internal.example.com`
+# 2. DNS Troubleshooting for `internal.example.com`
 
 ## Task Description
 
