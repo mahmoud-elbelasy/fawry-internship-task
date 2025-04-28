@@ -304,8 +304,6 @@ For each potential issue identified above, the following sections explain how to
 
 
 
-## Screenshots
-Screenshots demonstrating the diagnosis (e.g., `dig`, `curl`, `ss`, `telnet`) and resolution (e.g., applying fixes like `iptables`, `systemctl start`, editing `/etc/hosts`) are included in the project submission but not embedded in this README.
 
 ## Bonus: Configure Local /etc/hosts and Persist DNS Settings
 ### Local /etc/hosts Entry
