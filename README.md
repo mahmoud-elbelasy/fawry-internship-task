@@ -75,6 +75,11 @@ To support additional features like regex matching or options such as `-i` (case
 ### 3. Hardest Part of Implementation
 The most challenging aspect of developing this script was handling combined options like `-vn` or `-nv` while ensuring consistent behavior. Using `getopts` required careful management of flags to ensure that the order of options did not affect the outcome, which involved debugging edge cases and testing various combinations. Another difficulty was implementing the `-v` (invert match) functionality correctly, as it required adjusting the logic to print non-matching lines while still supporting the `-n` option for line numbers. Ensuring that the output format matched `grep`'s style, especially with line numbers and inverted matches, involved trial and error to get the formatting and logic right, making this part of the implementation particularly tricky.
 
+## Bonus Features
+- **--help Flag**: Added to display usage information, enhancing usability.
+
+  ![image](https://github.com/user-attachments/assets/d7ac15e3-b245-4770-b90b-d5ea406cf170)
+
 
 # Task2. DNS Troubleshooting for `internal.example.com`
 
