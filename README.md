@@ -1,3 +1,68 @@
+# mygrep.sh - A Mini Grep Implementation
+
+## Overview
+`mygrep.sh` is a Bash script that implements a simplified version of the `grep` command. It searches for a specified string (case-insensitive) in a text file and outputs matching lines, with support for specific command-line options. This project fulfills the requirements of a custom command-line utility with error handling, option parsing, and a style mimicking the standard `grep` command.
+
+## Features
+- **Basic Functionality**:
+  - Searches for a string (case-insensitive) in a text file.
+  - Prints lines that match the search string.
+- **Command-Line Options**:
+  - `-n`: Displays line numbers for each matching line.
+  - `-v`: Inverts the match, printing lines that do **not** contain the search string.
+  - Supports combinations like `-vn` or `-nv` (behaves the same as `-v -n`).
+  - `--help`: Displays usage information.
+- **Error Handling**:
+  - Validates input (e.g., missing search string, non-existent file).
+  - Provides clear error messages and exits with appropriate status codes.
+- **Executable**:
+  - Script is executable (`chmod +x mygrep.sh`) and accepts input via command-line arguments.
+
+## Usage
+```bash
+./mygrep.sh [OPTIONS] SEARCH_STRING FILE
+```
+
+### Options
+- `-n`: Show line numbers with matching lines.
+- `-v`: Print lines that do not match the search string.
+- `--help`: Display usage information.
+
+### Examples
+1. Basic search for "hello":
+   ```bash
+   ./mygrep.sh hello testfile.txt
+   ```
+   Output:
+   ```
+   Hello world
+   HELLO AGAIN
+   ```
+
+2. Search with line numbers:
+   ```bash
+   ./mygrep.sh -n hello testfile.txt
+   ```
+   Output:
+   ```
+   1:Hello world
+   4:HELLO AGAIN
+   ```
+
+3. Invert match with line numbers:
+   ```bash
+   ./mygrep.sh -vn hello testfile.txt
+   ```
+   Output:
+   ```
+   2:This is a test
+   3:another test line
+   5:Don't match this line
+   6:Testing one two three
+   ```
+   ![Screenshot 2025-04-28 022733](https://github.com/user-attachments/assets/3733d3d9-26c3-465c-8a90-76f7802aa765)
+
+
 # 🛠️ DNS Troubleshooting for `internal.example.com`
 
 ## Task Description
