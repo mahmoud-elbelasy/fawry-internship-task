@@ -4,7 +4,7 @@
 
 Investigate why the internal web dashboard (`internal.example.com`) is unreachable from multiple systems.  
 The service appears to be running, but users receive "host not found" errors.  
-Focus: **Troubleshoot, verify DNS resolution, and compare it using different DNS servers**.
+
 
 ---
 
@@ -18,12 +18,14 @@ Display the DNS servers currently configured on the system:
 cat /etc/resolv.conf
 ```
 
-**Output example:**
+**Output:**
 ```
-nameserver 10.0.0.1
+nameserver 127.0.0.53
 ```
+![Screenshot 2025-04-28 155723](https://github.com/user-attachments/assets/1686dbf0-4c6a-4eb9-a629-87c95c53b119)
 
-This shows that the system is using an internal DNS server (`10.0.0.1`).
+
+This shows that the system is using an internal DNS server (`127.0.0.53`).
 
 ---
 
@@ -35,22 +37,11 @@ Test DNS resolution using the default system DNS:
 dig internal.example.com
 ```
 
-or
 
-```bash
-nslookup internal.example.com
-```
+**Output:**
 
-**Output example:**
-```
-;; connection timed out; no servers could be reached
-```
+![Screenshot 2025-04-28 155747](https://github.com/user-attachments/assets/c06b98d7-90be-44e8-8b41-ff6e84860b6a)
 
-or
-
-```
-** server can't find internal.example.com: NXDOMAIN
-```
 
 Result: **Resolution failed** using the internal DNS server.
 
@@ -64,16 +55,12 @@ Manually query Google’s public DNS server:
 dig @8.8.8.8 internal.example.com
 ```
 
-or
 
-```bash
-nslookup internal.example.com 8.8.8.8
-```
-
-**Output example:**
+**Output :**
 ```
 ** server can't find internal.example.com: NXDOMAIN
 ```
+![Screenshot 2025-04-28 155845](https://github.com/user-attachments/assets/892e86c1-a37d-4541-9da5-08c1c1a9fbdf)
 
 Result: **Resolution failed** again, as expected — public DNS servers do not know about internal domains.
 
@@ -81,36 +68,12 @@ Result: **Resolution failed** again, as expected — public DNS servers do not k
 
 ## Findings
 
-- The internal DNS server listed in `/etc/resolv.conf` (`10.0.0.1`) **failed to resolve** `internal.example.com`.
+- The internal DNS server listed in `/etc/resolv.conf` (`127.0.0.53`) **failed to resolve** `internal.example.com`.
 - Public DNS (`8.8.8.8`) also **failed to resolve** `internal.example.com`, which is expected because public DNS servers do not manage internal company domains.
 - Therefore, the issue is likely with the **internal DNS server** being down, misconfigured, or missing the correct DNS records.
 
 ---
 
-## Conclusion
-
-✅ DNS misconfiguration or failure detected.  
-🛠️ The internal DNS server needs to be fixed or updated to properly resolve `internal.example.com`.
-
-If urgent access is required, a temporary solution could be:
-- Manually adding an entry to `/etc/hosts`
-- Or restoring the internal DNS service
-
----
-
-## Bonus (optional)
-
-**Temporary `/etc/hosts` example:**
-
-```bash
-sudo nano /etc/hosts
-```
-
-Add:
-```
-10.0.0.50   internal.example.com
-```
-(Replace `10.0.0.50` with the correct server IP if known.)
 
 ---
 
